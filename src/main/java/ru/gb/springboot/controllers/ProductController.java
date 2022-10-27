@@ -8,7 +8,7 @@ import ru.gb.springboot.entities.Product;
 import ru.gb.springboot.services.ProductService;
 
 @Controller
-@RequestMapping("/products")
+@RequestMapping("/app")
 public class ProductController {
     private ProductService productService;
 
@@ -17,13 +17,13 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @GetMapping("/showProducts")
+    @GetMapping("/products")
     public String getList(Model model) {
         model.addAttribute("products", productService.getList());
         return "products";
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/products/{id}")
     public String getProductById(Model model, @PathVariable Long id) {
         model.addAttribute("product", productService.getProductById(id));
         return "product_info";
@@ -40,4 +40,17 @@ public class ProductController {
         productService.addProduct(product);
         return "redirect:/products/showProducts";
     }
+
+    @GetMapping("/products/delete/{id}")
+    public void deleteProduct(@PathVariable Long id) {
+        productService.delete(id);
+    }
+
+    //CRUD
+//    получение товара по id [ GET .../app/products/{id} ]
+//    получение всех товаров [ GET .../app/products ]
+//    создание нового товара [ POST .../app/products ]
+//    удаление товара по id.[ GET .../app/products/delete/{id} ]
+
+
 }
