@@ -35,13 +35,14 @@ public class CartService {
 
     @Transactional
     public Map<Product, Long> deleteProductFromCart(Cart cart, List<Product> products) {
-        products.stream().forEach(x -> cart.addProduct(x));
+        products.stream().forEach(x -> products.remove(x));
         cartRepository.save(cart);
         return getCartList(cart);
     }
 
     @Transactional
     public Map<Product, Long> updateCart(Cart cart, List<Product> products) {
+        cart.getProducts().clear();
         products.stream().forEach(x -> cart.addProduct(x));
         cartRepository.save(cart);
         return getCartList(cart);
