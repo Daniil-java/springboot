@@ -1,50 +1,34 @@
 package ru.gb.springboot.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.gb.springboot.entities.Cart;
 import ru.gb.springboot.entities.Product;
-import ru.gb.springboot.repositories.CartRepository;
+import ru.gb.springboot.exceptions.ResourceNotFoundException;
+import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 
-import javax.transaction.Transactional;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 
 @Service
+@RequiredArgsConstructor
 public class CartService {
-    @Autowired
-    private CartRepository cartRepository;
+    private final ProductService productService;
+    private Cart cart;
 
-    public Map<Product, Long> getCartList(Cart cart) {
-        Cart newCart = cartRepository.findById(cart.getId()).get();
-        Map<Product, Long> products = newCart.getProducts().stream()
-                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
-
-        return products;
+    @PostConstruct
+    public void init() {
+        cart = new Cart();
+        cart.setItems(new ArrayList<>());
     }
 
-    @Transactional
-    public Map<Product, Long> addProductToCart(Cart cart, List<Product> products) {
-        products.stream().forEach(x -> cart.addProduct(x));
-        cartRepository.save(cart);
-        return getCartList(cart);
+    public Cart getCurrentCart() {
+        return cart;
     }
 
-    @Transactional
-    public Map<Product, Long> deleteProductFromCart(Cart cart, List<Product> products) {
-        products.stream().forEach(x -> products.remove(x));
-        cartRepository.save(cart);
-        return getCartList(cart);
+    public void addToCart(Long productId) {
+        Product p = productService.getProductById(productId).orElseThrow(() -> new ResourceNotFoundException("Продукт с id: " + productId + " не найден"));
+        cart.add(p);
     }
 
-    @Transactional
-    public Map<Product, Long> updateCart(Cart cart, List<Product> products) {
-        cart.getProducts().clear();
-        products.stream().forEach(x -> cart.addProduct(x));
-        cartRepository.save(cart);
-        return getCartList(cart);
-    }
 }
