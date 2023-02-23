@@ -1,8 +1,8 @@
-package ru.gb.springboot.repositories;
+package ru.gb.products.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import ru.gb.springboot.entities.Product;
+import ru.gb.products.entities.Product;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {

@@ -1,29 +1,39 @@
-package ru.gb.springboot.entities;
+package ru.gb.products.entities;
 
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
-import java.util.List;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Data
-@Entity(name="products")
+@Entity
+@Table(name = "products")
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
+
     @Column(name = "title")
     private String title;
-    @Column(name = "cost")
-    private int cost;
 
-    @ManyToMany
-    @JoinTable(
-            name = "carts_products",
-            joinColumns = @JoinColumn(name = "product_id"),
-            inverseJoinColumns = @JoinColumn(name = "cart_id")
-    )
-    private List<Cart> carts;
+    @Column(name = "cost")
+    private Double cost;
+
+    @Column(name = "create_at")
+    @CreationTimestamp
+    private LocalDateTime createAt;
+
+    @Column(name = "update_at")
+    @UpdateTimestamp
+    private LocalDateTime updateAt;
 
     @Override
     public String toString() {

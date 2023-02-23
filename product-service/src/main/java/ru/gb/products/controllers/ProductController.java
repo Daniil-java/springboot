@@ -1,40 +1,50 @@
-package ru.gb.springboot.controllers;
+package ru.gb.products.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import ru.gb.springboot.entities.Product;
-import ru.gb.springboot.services.ProductService;
+import ru.gb.api.ProductDTO;
+import ru.gb.api.ResourceNotFoundException;
+import ru.gb.products.entities.Product;
+import ru.gb.products.services.ProductService;
+
+import java.util.List;
 
 @Controller
-@RequestMapping("/app")
+@RequestMapping("/v1/app")
+@RequiredArgsConstructor
 public class ProductController {
-    private ProductService productService;
+    private final ProductService productService;
 
-    @Autowired
-    public void setProductService(ProductService productService) {
-        this.productService = productService;
-    }
+//    @GetMapping("/products")
+//    public String getList(Model model) {
+//        model.addAttribute("products", productService.getList());
+//        return "products";
+//    }
 
     @GetMapping("/products")
-    public String getList(Model model) {
-        model.addAttribute("products", productService.getList());
-        return "products";
+    public List<ProductDTO> getAllProducts() {
+        return productService.getList();
     }
+
 
     @GetMapping("/products/{id}")
     public String getProductById(Model model, @PathVariable Long id) {
-        model.addAttribute("product", productService.getProductById(id));
+        model.addAttribute("product", getProductByIdCheck(id));
         return "product_info";
     }
 
-    @GetMapping("/create")
+    private Product getProductByIdCheck(Long id) {
+        return productService.getProductById(id).orElseThrow(() -> new ResourceNotFoundException("PRODUCT NOT FOUND! ID: " + id));
+    }
+
+    @GetMapping("/products/create")
     public String createProduct() {
         return "create_product";
     }
 
-    @PostMapping("/create")
+    @PostMapping("/products/create")
     public String addProduct(@ModelAttribute("product") Product product) {
         System.out.println(product.toString());
         productService.addProduct(product);
