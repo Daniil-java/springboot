@@ -5,6 +5,9 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Digits;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -25,7 +28,9 @@ public class Product {
     private String title;
 
     @Column(name = "cost")
-    private Double cost;
+    @DecimalMin(value = "0.01", message = "минимальное значение 0")
+    @Digits(integer = 10, fraction = 2)
+    private BigDecimal cost;
 
     @Column(name = "create_at")
     @CreationTimestamp
