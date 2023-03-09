@@ -1,15 +1,13 @@
 package ru.gb.products.converters;
 
 import org.springframework.stereotype.Component;
-import ru.gb.api.ProductDTO;
+import ru.gb.api.ProductDto;
 import ru.gb.products.entities.Product;
-
-import javax.persistence.Column;
 
 @Component
 public class ProductDtoConverter {
 
-    public ProductDTO entityToDto(Product c) {
-        return new ProductDTO(c.getId(), c.getTitle(), c.getCost());
+    public ProductDto entityToDto(Product c) {
+        return new ProductDto(c.getId(), c.getTitle(), c.getCost(), c.getCategory().getTitle());
     }
 }

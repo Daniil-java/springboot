@@ -20,12 +20,12 @@ public class Product {
     @Column(name = "id")
     private Long id;
 
+    @Column(name = "title")
+    private String title;
+
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
-
-    @Column(name = "title")
-    private String title;
 
     @Column(name = "cost")
     @DecimalMin(value = "0.01", message = "минимальное значение 0")

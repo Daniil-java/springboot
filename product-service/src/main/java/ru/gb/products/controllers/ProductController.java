@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import ru.gb.api.ProductDTO;
+import ru.gb.api.ProductDto;
 import ru.gb.api.ResourceNotFoundException;
 import ru.gb.products.entities.Product;
 import ru.gb.products.services.ProductService;
@@ -12,22 +12,15 @@ import ru.gb.products.services.ProductService;
 import java.util.List;
 
 @Controller
-@RequestMapping("/v1/app")
+@RequestMapping("/api/v1")
 @RequiredArgsConstructor
 public class ProductController {
     private final ProductService productService;
 
-//    @GetMapping("/products")
-//    public String getList(Model model) {
-//        model.addAttribute("products", productService.getList());
-//        return "products";
-//    }
-
     @GetMapping("/products")
-    public List<ProductDTO> getAllProducts() {
+    public List<ProductDto> getAllProducts() {
         return productService.getList();
     }
-
 
     @GetMapping("/products/{id}")
     public String getProductById(Model model, @PathVariable Long id) {
@@ -55,12 +48,6 @@ public class ProductController {
     public void deleteProduct(@PathVariable Long id) {
         productService.delete(id);
     }
-
-    //CRUD
-//    получение товара по id [ GET .../app/products/{id} ]
-//    получение всех товаров [ GET .../app/products ]
-//    создание нового товара [ POST .../app/products ]
-//    удаление товара по id.[ GET .../app/products/delete/{id} ]
 
 
 }
